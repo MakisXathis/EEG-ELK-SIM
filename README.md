@@ -36,9 +36,14 @@ Refer to the linked paper for more details on the dataset file naming convention
 ### Kafka
 Make sure to replace the IP of the broker container from 192.168.1.76 to the IP of your VM/machine that the docker compose is running on.
 
-Upon first running the Kafka cluster, the `kafka-connect` service will fail due to missing topics. Follow these steps to resolve the issue:
+Upon first running the Kafka cluster
+```bash
+docker compose up -d
+```
+the `kafka-connect` service will fail due to missing topics.
+Follow these steps to resolve the issue:
 
-1. Access the Kafka Control Center using the IP of the machine running the broker.
+1. Access the Kafka Control Center using the IP and port specified in the compose file of the machine running the broker.
 2. Create the following topics:
    - `brain_data`
    - `kafka_connect_offset`
@@ -48,7 +53,11 @@ Upon first running the Kafka cluster, the `kafka-connect` service will fail due 
 3. Set the retention period for the Kafka Connect topics to `compact`. The retention period itself is not critical.
 4. Set the `Number of partitions` for these topics to 1.
 
-Once the topics are configured, restart the Kafka cluster. The `kafka-connect` container should start successfully.
+Once the topics are configured, build the kafka-connect image 
+```bash
+docker compose up -d kafka-connect
+```
+ and the container should start successfully.
 
 ### Simulation Script
 To utilize the data simulation script:
@@ -61,12 +70,100 @@ To utilize the data simulation script:
 2. Run the `publish.sh` script:
    ```bash
    cd /tmp/full_dataset
-   /tmp/full_dataset/publish.sh
+   ./publish.sh
    ```
 
 If no specific file is specified, the script will iterate through all dataset files which in our example contain only a small portion of the subjects from subjects 1 and 2.
 
 ---
+
+### ELK
+
+The basic ELK setup has been sourced from the repository over [here](https://github.com/deviantony/docker-elk/tree/tls), specifically the tls branch.
+
+For the initial setup the instructions can be found also the docker-elk subfolder or the original repository.
+
+If you choose to setup ELK from the original repository there are a number of updates that would need to do in order for the ELK to operate with the KibanaDashboardHelper and kafka.
+
+#### Kibana
+
+In order to setup Kibana to operate through https with the use of the self-signed certificates from the tls setup you need to update kibana.yml:
+```bash
+server.ssl.enabled: true
+```
+
+#### Logstash
+In order for Logstash to be able to communicate with Kafka add the following in the logstash/pipeline/logstash.yml "input" field:
+```bash
+kafka {
+        bootstrap_servers => "192.168.1.76:9092"
+        topics => ["brain_data"]
+        group_id => "logstash-consumer-group"
+}
+```
+Replace 192.168.1.76 with the IP of the Kafka broker.
+
+The "filter" to convert the input from kafka to seperate fields and their correct type for querying purposes:
+```bash
+filter {
+    csv {
+        separator => "," # Set the separator to comma
+        columns => ["ID","Task Identifier","Activity Type","Repetition","Subject","Electrode 1","Electrode 2","Electrode 3","Electrode 4","Electrode 5","Electrode 6","Electrode 7","Electrode 8","Electrode 9","Electrode 10","Electrode 11","Electrode 12","Electrode 13","Electrode 14","Electrode 15","Electrode 16","ts"]
+        source => "message" # Specify the source field
+        convert => {
+                "ID" => "integer"
+		"Repetition" => "integer"
+		"Subject" => "integer"
+		"Electrode 1" => "float"
+		"Electrode 2" => "float"
+		"Electrode 3" => "float"
+		"Electrode 4" => "float"
+		"Electrode 5" => "float"
+		"Electrode 6" => "float"
+		"Electrode 7" => "float"
+		"Electrode 8" => "float"
+		"Electrode 9" => "float"
+		"Electrode 10" => "float"
+		"Electrode 11" => "float"
+		"Electrode 12" => "float"
+		"Electrode 13" => "float"
+		"Electrode 14" => "float"
+		"Electrode 15" => "float"
+		"Electrode 16" => "float"
+        }
+    }
+    
+    # Parse timestamp from the CSV data if available
+    date {
+        match => ["timestamp", "dd-MM-yyyy HH:mm:ss"] # Adjust format as needed
+        target => "timestamp"
+    }
+}
+```
+
+Once Kafka and ELK are running, run the publish.sh script in order to publish some data to kafka and these should be visible through Kibana.
+
+#### Kibana Dashboard Setup
+Kibana does not provide a proper API for dashboard creation like it is done on their serverless offering.
+For this reason the logics applied in order to interact with Kibana in a dynamic manner progrmmatically are specific to this project and the way they were developed is the following:
+
+1. Due to the number of electrodes that were present in the dataset 16 template dashboards were created with an applied time filter. These dashboards display a combination of electrodes, from 1 up to 16 altogether.
+```bash
+curl -k -X GET "https://localhost:5601/api/saved_objects/_find?type=dashboard&per_page=100" -u elastic:${elastic_password}
+```
+3. The "saved_objects/_find" API was used in order to extract information about the dashboard unique identifier in Kibana
+4. The "saved_objects/_export" API was used to store each dashboard to a specific template file. You can find these dashboards under the KibanaDashboardHelper and import them to your local Kibana using the "saved_objects/_import" API although it's not needed:
+```bash
+curl -k -X POST https://localhost:5601/api/saved_objects/_import?createNewCopies=true -H "kbn-xsrf: true" --form file=@dashboard.ndjson -u elastic:${elastic_password}
+```
+
+After exporting a few dashboards and experimenting on the exported objects a pattern was identified, in which new dashboards could be created with an alternate filter and alternative electrodes to the original ones.
+
+So changing the filter to point to the past 15 days instead of the 30 days of the template was possible and also changing the dahsboard to display values of electrodes 6,3,7 instead of 1,2,3 was again possible.
+
+Issues arose when trying to create dashboards that would display more electrodes than the original template, from the exported file though, hence why 16 template dashboards were created.
+
+
 
 ## Additional Notes
 This project is a practical implementation of data streaming and visualization. Feel free to explore and modify it to fit your use case!
