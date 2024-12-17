@@ -161,9 +161,46 @@ After exporting a few dashboards and experimenting on the exported objects a pat
 
 So changing the filter to point to the past 15 days instead of the 30 days of the template was possible and also changing the dahsboard to display values of electrodes 6,3,7 instead of 1,2,3 was again possible.
 
-Issues arose when trying to create dashboards that would display more electrodes than the original template, from the exported file though, hence why 16 template dashboards were created.
+Issues arose when trying to create dashboards that would display more electrodes than the original template from the exported file though, hence why 16 template dashboards were created.
 
+### ELKInterface
 
+ELKInterafce is build using maven and as described above serves the purpose of acting as an intermediate between the user and Kibana, providing to the user the ability to create dashboards dynamically and retrieve them as images locally.
+
+To run ELKInterface you need to setup a config.json file similar to the one in the resources folder of the project and pass its path as an argument to the executable jar, otherwise a file named config.json is attempted to be loaded from the local folder that the executable is run.
+
+In the executable you need to specify the connection properties of the Kibana server:
+```bash
+{
+	"server":
+	{
+		"ip": "192.168.1.81",
+		"port": 5601,
+		"ssl_enabled": true,
+		"timeout": 10,
+		"credentials":
+		{
+			"username": "elastic",
+			"password": "ATwI9nzPKj-t7=k*uDF*"
+		}
+	}
+}
+```
+
+Once the configuration is loaded the user is requested to input the electrodes, a timeframe on which to filter upon, a title for the dashboard and the local folder where the dashboard will be saved:
+![image](https://github.com/user-attachments/assets/f3f5fbaf-246a-4fb7-ac61-0f888ba1eb44)
+
+With an output similar to:
+![image](https://github.com/user-attachments/assets/51198d25-c8c4-4060-ba61-712b5d6968e8)
+
+This is achived by following the below proccesses:
+1. Based on the number of electrodes the user inputs the appropriate template file is selected and updated
+2. A request is made to Kibana to create the dashboard based on the updated template file
+3. Once the dashboard is updated a request is made to retrieve the the list of all the dashboards from Kibana and the correct dashboardID is selected based on the description of the dashboard.
+4. Using the ID retrieved above a request is made to Kibana to generate a PND report.
+   This API was not created from Kibana with the purpose of being programmatically generated or utilized. For this reason I have taken the endpoint that was generated from Kibana using their UI and update the dashboardID as needed.
+   This path might need to be modified from user to user as it contains information about the Kibana version and also timezone of the browser that the initial endpoint was received upon. For the purposes of this demonstration it is hardcoded. As a response we receive an endpoint which can be utilized to download the produced report.
+5. The report requires about 10-15 seconds to be created so an waiting period of 20 seconds has been added. Once the report is ready, its downloaded and saved locally to the path specified in the user input and the png is displayed on a seperate pop-up window after which the whole process is restarted.
 
 ## Additional Notes
 This project is a practical implementation of data streaming and visualization. Feel free to explore and modify it to fit your use case!
