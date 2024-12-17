@@ -202,5 +202,12 @@ This is achived by following the below processes:
    This path might need to be modified from user to user as it contains information about the Kibana version and also timezone of the browser that the initial endpoint was received upon. For the purposes of this demonstration it is hardcoded. As a response we receive an endpoint which can be utilized to download the produced report.
 5. The report requires about 10-15 seconds to be created so an waiting period of 20 seconds has been added. Once the report is ready, its downloaded and saved locally to the path specified in the user input and the png is displayed on a seperate pop-up window after which the whole process is restarted.
 
+### Possible importovements:
+1. Add possibility for more filters about the remaining fields (subject, task etc.)
+2. Delete the created reports/dashboards after the execution
+3. Setup the dashboard to display all the available records and not be restrained to the latest 500 timestamps
+4. Make the generate report API template universal
+
+
 ## Additional Notes
 This project is a practical implementation of data streaming and visualization. Feel free to explore and modify it to fit your use case!
