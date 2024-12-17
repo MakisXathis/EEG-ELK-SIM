@@ -212,12 +212,12 @@ public class ELKInterfaceClient {
             
             try {
             	System.out.println("Waiting for report creation...");
-				Thread.sleep(15000); //wait until the report is complete
+				Thread.sleep(20000); //wait until the report is complete
 			} catch (InterruptedException e) {
 				System.out.println("System was interrupted. Exiting application...");
 			}
             
-            if(getKibanaReport(client, config.getServer().getIp(), config.getServer().getPort(), config.getServer().getSsl_enabled(), config.getServer().getCredentials().getUsername(), config.getServer().getCredentials().getPassword(), reportPath, "C:\\Users\\Makis\\Downloads\\"+dashboardTitle+".png")) {
+            if(getKibanaReport(client, config.getServer().getIp(), config.getServer().getPort(), config.getServer().getSsl_enabled(), config.getServer().getCredentials().getUsername(), config.getServer().getCredentials().getPassword(), reportPath, pngPath+"\\"+dashboardTitle+".png")) {
             	
             	showPNG(pngPath+"\\"+dashboardTitle+".png");
             	
@@ -258,6 +258,7 @@ public class ELKInterfaceClient {
 		 for (Integer electrode: electrodes) {
 			 template.getAttributes().setPanelsJSON(template.getAttributes().getPanelsJSON().replaceFirst("Median of Electrode "+i, "Median of Electrode "+electrode));
 			 template.getAttributes().setPanelsJSON(template.getAttributes().getPanelsJSON().replaceFirst("sourceField\":\"Electrode "+i+"\"", "sourceField\":\"Electrode "+electrode+"\""));
+			 template.getAttributes().setPanelsJSON(template.getAttributes().getPanelsJSON().replaceFirst("1 Electrode through time", dashboardTitle));
 			 i++;
 		 }
 		 
@@ -567,28 +568,4 @@ public class ELKInterfaceClient {
                                           "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
- 
-	 /*public static void writeTemplateToNDJSON(String JSONFilePath, String NDJSONFilePath) {
-		 try (FileReader reader = new FileReader(JSONFilePath+".json");
-		      BufferedWriter writer = new BufferedWriter(new FileWriter(NDJSONFilePath+".ndjson"))) 
-		 {
-			 // Parse the JSON file as an array
-		     JsonArray jsonArray = JsonParser.parseReader(reader).getAsJsonArray();
-
-		     // Gson instance with pretty printing disabled (compact JSON)
-		     Gson gson = new GsonBuilder().create();
-
-		     // Write each JSON object as a single line
-		     for (JsonElement jsonElement : jsonArray) {
-		         writer.write(gson.toJson(jsonElement)); // Convert object to JSON string
-		         writer.newLine(); // Add a newline for NDJSON format
-		     }
-
-		     System.out.println("Conversion complete! NDJSON written to " + NDJSONFilePath+".ndjson");
-		 } catch (IOException e) {
-		     System.err.println("Error reading or writing ndjson file "+ NDJSONFilePath+".ndjson: " + e.getMessage());
-		     System.exit(1);
-		 }
-	 }*/
-	 
 }
