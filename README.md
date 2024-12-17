@@ -193,7 +193,7 @@ Once the configuration is loaded the user is requested to input the electrodes, 
 With an output similar to:
 ![image](https://github.com/user-attachments/assets/51198d25-c8c4-4060-ba61-712b5d6968e8)
 
-This is achived by following the below proccesses:
+This is achived by following the below processes:
 1. Based on the number of electrodes the user inputs the appropriate template file is selected and updated
 2. A request is made to Kibana to create the dashboard based on the updated template file
 3. Once the dashboard is updated a request is made to retrieve the the list of all the dashboards from Kibana and the correct dashboardID is selected based on the description of the dashboard.
