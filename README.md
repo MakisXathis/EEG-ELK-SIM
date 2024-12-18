@@ -83,7 +83,7 @@ The basic ELK setup has been sourced from the repository over [here](https://git
 
 For the initial setup the instructions can be found also the docker-elk subfolder or the original repository.
 
-If you choose to setup ELK from the original repository there are a number of updates that would need to do in order for the ELK to operate with the KibanaDashboardHelper and kafka.
+If you choose to setup ELK from the original repository there are a number of updates that would need to do in order for the ELK to operate with the ELKInterface and kafka.
 
 #### Kibana
 
@@ -152,7 +152,7 @@ For this reason the logics applied in order to interact with Kibana in a dynamic
 curl -k -X GET "https://localhost:5601/api/saved_objects/_find?type=dashboard&per_page=100" -u elastic:${elastic_password}
 ```
 3. The "saved_objects/_find" API was used in order to extract information about the dashboard unique identifier in Kibana
-4. The "saved_objects/_export" API was used to store each dashboard to a specific template file. You can find these dashboards under the KibanaDashboardHelper and import them to your local Kibana using the "saved_objects/_import" API although it's not needed:
+4. The "saved_objects/_export" API was used to store each dashboard to a specific template file. You can find these dashboards under the ELKInterface and import them to your local Kibana using the "saved_objects/_import" API although it's not needed:
 ```bash
 curl -k -X POST https://localhost:5601/api/saved_objects/_import?createNewCopies=true -H "kbn-xsrf: true" --form file=@dashboard.ndjson -u elastic:${elastic_password}
 ```
