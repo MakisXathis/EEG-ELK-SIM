@@ -4,7 +4,7 @@
 This project demonstrates how to:
 - Post data from Kafka to Elastic using Logstash.
 - Dynamically create dashboards in Kibana to visualize the data.
-- Integrate an external Java component for additional processing.
+- Use an external Java component for programmatic access to Kibana and external dashboard creation/export mechanism
 
 ### Dataset
 The dataset used for this project contains EEG data from human limb movement, sourced from the following paper: [EEG Data on Mendeley](https://data.mendeley.com/datasets/x8psbz3f6x/2).
@@ -196,7 +196,7 @@ With an output similar to:
 This is achived by following the below processes:
 1. Based on the number of electrodes the user inputs the appropriate template file is selected and updated
 2. A request is made to Kibana to create the dashboard based on the updated template file
-3. Once the dashboard is updated a request is made to retrieve the the list of all the dashboards from Kibana and the correct dashboardID is selected based on the description of the dashboard.
+3. Once the dashboard is updated a request is made to retrieve the list of all the dashboards from Kibana and the correct dashboardID is selected based on the description of the dashboard.
 4. Using the ID retrieved above a request is made to Kibana to generate a PND report.
    This API was not created from Kibana with the purpose of being programmatically generated or utilized. For this reason I have taken the endpoint that was generated from Kibana using their UI and update the dashboardID as needed.
    This path might need to be modified from user to user as it contains information about the Kibana version and also timezone of the browser that the initial endpoint was received upon. For the purposes of this demonstration it is hardcoded. As a response we receive an endpoint which can be utilized to download the produced report.
