@@ -1,0 +1,14 @@
+version: '1.0.0'
+
+services:
+  elkinterface:
+    image: xanthismakis/elkinterface:latest
+    container_name: elkinterface_container
+    restart: always
+    ports:
+      - "8080:8080"  # Map host port 8080 to container port 8080
+    volumes:
+      - ./config.json:/app/config.json  # Mount local config.json into the container
+      - ./dashboards:/app/dashboards  # Mount local dashboards folder into the container
+    working_dir: /app
+    command: ["java", "-jar", "ELKInterface.jar"]
