@@ -167,9 +167,8 @@ Issues arose when trying to create dashboards that would display more electrodes
 
 ELKInterafce is build using maven and as described above serves the purpose of acting as an intermediate between the user and Kibana, providing to the user the ability to create dashboards dynamically and retrieve them as images locally.
 
-To run ELKInterface you need to setup a config.json file similar to the one in the resources folder of the project and pass its path as an argument to the executable jar, otherwise a file named config.json is attempted to be loaded from the local folder that the executable is run.
-
-In the executable you need to specify the connection properties of the Kibana server:
+The easiest way to run ELKInterface is to run the docker-compose.yml found under the elkinterface-docker directory. First you need to create the config.json and a directory named 'dashboards' that contain the template dashboards of the application. 
+For the config.json you need to specify the connection properties of the Kibana server:
 ```bash
 {
 	"server":
@@ -186,6 +185,9 @@ In the executable you need to specify the connection properties of the Kibana se
 	}
 }
 ```
+While for the 'dashboards/' directory you can copy the one found under the ELKInterface directory.
+
+Once the application is running then you connext with it using an HTTP client that supports receiving PNG images as responses for the body of the HTTP request (e.x. Postman).
 
 Once the configuration is loaded the user is requested to input the electrodes, a timeframe on which to filter upon, a title for the dashboard and the local folder where the dashboard will be saved:
 ![image](https://github.com/user-attachments/assets/f3f5fbaf-246a-4fb7-ac61-0f888ba1eb44)
@@ -207,7 +209,6 @@ This is achived by following the below processes:
 2. Delete the created reports/dashboards after the execution
 3. Setup the dashboard to display all the available records and not be restrained to the latest 500 timestamps
 4. Make the generate report API template universal
-
 
 ## Additional Notes
 This project is a practical implementation of data streaming and visualization. Feel free to explore and modify it to fit your use case!
