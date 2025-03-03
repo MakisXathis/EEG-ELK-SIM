@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Build-Jdk-Spec: 23
-Main-Class: com.auth.meta.ELKInterfaceClient
-Created-By: Maven Integration for Eclipse
-

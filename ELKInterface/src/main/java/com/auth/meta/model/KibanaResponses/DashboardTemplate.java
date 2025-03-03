@@ -112,4 +112,21 @@ public class DashboardTemplate {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+	
+	public String toString() {
+		String references = "";
+		for (References reference: this.references) {
+			references = references+reference.toString();
+		}
+		return "attributes:"+attributes.toString()+
+				"coreMigrationVersion: "+coreMigrationVersion+
+				"created_at: "+created_at+
+				"id: "+id+
+				"managed: "+managed+
+				"references: "+references+
+				"type:"+type+
+				"typeMigrationVersion: "+typeMigrationVersion+
+				"updated_at: "+updated_at+
+				"version: "+version;
+	}
 }

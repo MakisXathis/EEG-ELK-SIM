@@ -81,4 +81,14 @@ public class Attributes {
 		this.panelsJSON = panelsJSON;
 	}
 	
+	public String toString() {
+		return "\"description\":"+description+
+				",\"kibanaSavedObjectMeta\":{\"searchSourceJSON\":"+kibanaSavedObjectMeta.getSearchSourceJSON()+
+				"}, \"optionsJSON\":"+optionsJSON+
+				", \"panelsJSON\":"+panelsJSON+
+				",\"timeRestore\":"+timeRestore+
+				",\"title\":"+title+
+				", \"version\":"+version;
+	}
+	
 }

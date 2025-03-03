@@ -1,0 +1,18 @@
+# Eclipse specific files
+.settings/
+.classpath
+.project
+
+# Build artifacts
+target/
+
+# Maven specific files
+dependency-reduced-pom.xml
+
+# Logs & temp files
+*.log
+*.tmp
+
+# OS-specific files (macOS, Windows)
+.DS_Store
+Thumbs.db
