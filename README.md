@@ -204,6 +204,8 @@ This is achived by following the below processes:
    This path might need to be modified from user to user as it contains information about the Kibana version and also timezone of the browser that the initial endpoint was received upon. For the purposes of this demonstration it is hardcoded. As a response we receive an endpoint which can be utilized to download the produced report.
 5. The report requires about 10-15 seconds to be created so an waiting period of 20 seconds has been added. Once the report is ready, its downloaded and saved locally to the path specified in the user input and the png is displayed on a seperate pop-up window after which the whole process is restarted.
 
+An alternative way to run the application is to  build the project found under 'ELKInterface/' and then run the executable produced. You would need to pass as argument to the executable the config.json and it is also to have the 'dashboards' directory in the same folder as the executable.
+
 ### Possible improvements:
 1. Add possibility for more filters about the remaining fields (subject, task etc.)
 2. Delete the created reports/dashboards after the execution
