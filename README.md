@@ -187,10 +187,9 @@ For the config.json you need to specify the connection properties of the Kibana 
 ```
 While for the 'dashboards/' directory you can copy the one found under the ELKInterface directory.
 
-Once the application is running then you connext with it using an HTTP client that supports receiving PNG images as responses for the body of the HTTP request (e.x. Postman).
-
-Once the configuration is loaded the user is requested to input the electrodes, a timeframe on which to filter upon, a title for the dashboard and the local folder where the dashboard will be saved:
-![image](https://github.com/user-attachments/assets/f3f5fbaf-246a-4fb7-ac61-0f888ba1eb44)
+Once the application is running then you can use it with an HTTP client that supports receiving PNG images as responses for the body of the HTTP request (e.x. Postman).
+The application is exposing the "get-dashboard" API and you can call it like this, passing the required parameters:
+	http://127.0.0.1:8080/get-dashboard?start_date=25-02-2025&end_date=28-02-2025&electrodes=1,5,7,8&description=test4&title=test4
 
 With an output similar to:
 ![image](https://github.com/user-attachments/assets/51198d25-c8c4-4060-ba61-712b5d6968e8)
